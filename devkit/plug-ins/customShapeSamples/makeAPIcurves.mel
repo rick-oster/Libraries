@@ -1,0 +1,84 @@
+//
+//  Copyright 2012 Autodesk, Inc.  All rights reserved.
+//
+//  Use of this software is subject to the terms of the Autodesk license 
+//  agreement provided at the time of installation or download, or which 
+//  otherwise accompanies this software in either electronic or hard copy form.   
+//
+
+global proc makeAPIcurves () {
+	// most basic curve
+	//
+	loadPlugin curveDrawSel;
+	eval "createNode curveDrawSel";
+	move -r -10 0 0;
+
+	// component curve
+	//
+	loadPlugin compCurveDrawSel;
+	eval "createNode compCurveDrawSel";
+	move -r -5 0 0;
+	for ($ii = 0; $ii < 4; $ii++) {
+		int $jj = 0;
+		if ($ii == 1 || $ii == 2) {
+			$jj = 2;
+		}
+		setAttr -type "double3" (".cp["+$ii+"]") ($ii) $jj 0;
+	}
+	addAttr -ln x0 -at double  compCurveDrawSel1;
+	setAttr -e -keyable true compCurveDrawSel1.x0;
+	connectAttr ".x0" ".cp[0].xv";	
+	addAttr -ln y0 -at double  compCurveDrawSel1;
+	setAttr -e -keyable true compCurveDrawSel1.y0;
+	connectAttr ".y0" ".cp[0].yv";	
+	addAttr -ln z0 -at double  compCurveDrawSel1;
+	setAttr -e -keyable true compCurveDrawSel1.z0;
+	connectAttr ".z0" ".cp[0].zv";	
+	addAttr -ln x1 -at double  compCurveDrawSel1;
+	setAttr -e -keyable true compCurveDrawSel1.x1;
+	connectAttr ".x1" ".cp[1].xv";	
+	addAttr -ln y1 -at double  compCurveDrawSel1;
+	setAttr -e -keyable true compCurveDrawSel1.y1;
+	connectAttr ".y1" ".cp[1].yv";
+	setAttr ".y1" 2.0;
+	addAttr -ln z1 -at double  compCurveDrawSel1;
+	setAttr -e -keyable true compCurveDrawSel1.z1;
+	connectAttr ".z1" ".cp[1].zv";	
+
+	// movable component curve
+	//
+	loadPlugin compCurveMovable;
+	eval "createNode compCurveMovable";
+	for ($ii = 0; $ii < 4; $ii++) {
+		int $jj = 0;
+		if ($ii == 1 || $ii == 2) {
+			$jj = 2;
+		}
+		setAttr -type "double3" (".cp["+$ii+"]") ($ii) $jj 0;
+	}
+
+	// history component curve
+	//
+	loadPlugin compCurveSimpHist;
+	eval "createNode compCurveSimpHist";
+	particle -p 3.5 0 0 -p 5 2 0 -p 7 2 0 -p 8.5 0 0 -c 1 ;
+	radial -pos 0 0 0 -m 5 -att 1 -typ 0  -mxd 20  -vsh none -vex 0 -vof 0 0 0 -vsw 360 -tsr 0.5 ;
+	move -r -os -wd 6.5 0 0 ;
+	connectDynamic -f radialField1  particle1;
+	connectAttr particle1.pos compCurveSimpHist1.is;
+	hide particle1;
+
+	// deformable component curve
+	//
+	loadPlugin compCurveDeformable;
+	eval "createNode compCurveDeformable";
+	move -r 10 0 0;
+	for ($ii = 0; $ii < 4; $ii++) {
+		int $jj = 0;
+		if ($ii == 1 || $ii == 2) {
+			$jj = 2;
+		}
+		setAttr -type "double3" (".cp["+$ii+"]") ($ii) $jj 0;
+	}
+	lattice -oc true;
+}

@@ -1,0 +1,17 @@
+//
+//  Copyright 2012 Autodesk, Inc.  All rights reserved.
+//
+//  Use of this software is subject to the terms of the Autodesk license 
+//  agreement provided at the time of installation or download, or which 
+//  otherwise accompanies this software in either electronic or hard copy form.   
+//
+
+global proc compCurveSimpSetup () {
+	loadPlugin compCurveSimpHist;
+	eval "createNode compCurveSimpHist";
+	particle -p 7.087512 0 5.739841 -p 3.673258 0 7.174456 -p -0.128219 0 6.900887 -p -5.834889 0 3.790258 -c 1 ;
+	radial -pos 0 0 0 -m 5 -att 1 -typ 0  -mxd 20  -vsh none -vex 0 -vof 0 0 0 -vsw 360 -tsr 0.5 ;
+	connectDynamic -f radialField1  particle1;
+	connectAttr particle1.pos compCurveSimpHist1.is;
+	hide particle1;
+}

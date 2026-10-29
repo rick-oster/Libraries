@@ -1,0 +1,19 @@
+//
+//  Copyright 2012 Autodesk, Inc.  All rights reserved.
+//
+//  Use of this software is subject to the terms of the Autodesk license 
+//  agreement provided at the time of installation or download, or which 
+//  otherwise accompanies this software in either electronic or hard copy form.   
+//
+
+global proc compCurveMovableSetup () {
+	loadPlugin compCurveMovable;
+	eval "createNode compCurveMovable";
+	for ($ii = 0; $ii < 4; $ii++) {
+		int $jj = 0;
+		if ($ii == 1 || $ii == 2) {
+			$jj = 3;
+		}
+		setAttr -type "double3" (".cp["+$ii+"]") ($ii*2) $jj 0;
+	}
+}
